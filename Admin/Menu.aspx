@@ -43,10 +43,10 @@
             </ul>
         </div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"> </script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"> </script>
         <script type="text/javascript">
             if (typeof jQuery == 'undefined') {
-                document.write(unescape("%3Cscript src='/Scripts/jquery-1.9.1.min.js' type='text/javascript'%3E%3C/script%3E"));
+                document.write(unescape("%3Cscript src='/Scripts/jquery-1.10.2.min.js' type='text/javascript'%3E%3C/script%3E"));
             }
         </script>
         <script src="../Scripts/listfilter.min.js" type="text/javascript"> </script>
