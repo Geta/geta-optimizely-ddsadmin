@@ -5,7 +5,7 @@
 <html>
 <head runat="server" ID="head1">
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
-    <title><%# CurrentStoreName %></title>
+    <title><%# CurrentStoreName %> <%# CurrentFilterMessage%></title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"> </script>
     <script type="text/javascript">
         if (typeof jQuery == 'undefined') {
@@ -49,17 +49,19 @@
         </asp:repeater>
     </form>
 
-    <h3><%= string.IsNullOrEmpty(CustomHeading) ? string.Format("Selected Store Type: {0}", CurrentStoreName) : CustomHeading %></h3>
+    <h3><%= string.IsNullOrEmpty(CustomHeading) ? string.Format("Selected Store Type: {0}", CurrentStoreName) : CustomHeading %> <%= CurrentFilterMessage %></h3>
     <%= CustomMessage %>
 
     <form runat="server">
         <span class="epi-cmsButton">
-            <asp:Button runat="server" ID="Flush" Text="Delete All Data" OnClick="FlushStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Delete" OnClientClick="return confirm('Are you really want to delete all data from ths table??')"/>
+            <asp:Button runat="server" ID="Flush" OnClick="FlushStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Delete" />
         </span>
         <span class="epi-cmsButton">
-            <asp:Button runat="server" ID="Export" Text="Export to Excel" OnClick="ExportStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Export"/>
+            <asp:Button runat="server" ID="Export" OnClick="ExportStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Export"/>
         </span>
         <input type="hidden" name="CurrentStoreName" value="<%= CurrentStoreName %>"/>
+        <input type="hidden" name="CurrentFilterColumnName" value="<%= CurrentFilterColumnName %>"/>
+        <input type="hidden" name="CurrentFilter" value="<%= CurrentFilter %>"/>
     </form>
 
     <br/>
@@ -84,7 +86,7 @@
 
     <script type="text/javascript" charset="utf-8">
         $(function() {
-            var storeParameter = "<%= Constants.StoreKey %>=<%= CurrentStoreName %>";
+            var storeParameter = "<%= GetParameters() %>";
             var dataTable = $('#storeItems').dataTable({
                 sDom: "Rlfrtip",
                 bJQueryUI: true,
