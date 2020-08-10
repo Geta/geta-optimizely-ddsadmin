@@ -60,8 +60,6 @@
             <asp:Button runat="server" ID="Export" OnClick="ExportStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Export"/>
         </span>
         <input type="hidden" name="CurrentStoreName" value="<%= CurrentStoreName %>"/>
-        <input type="hidden" name="CurrentFilterColumnName" value="<%= CurrentFilterColumnName %>"/>
-        <input type="hidden" name="CurrentFilter" value="<%= CurrentFilter %>"/>
     </form>
 
     <br/>
@@ -93,16 +91,16 @@
                 bProcessing: true,
                 bServerSide: true,
                 sPaginationType: "full_numbers",
-                sAjaxSource: "Data.ashx?<%= Constants.OperationKey %>=read" + parameters,
+                sAjaxSource: "Data.ashx?<%= Constants.OperationKey %>=read&" + parameters,
                 fnInitComplete: function(oSettings, json) {
                     initTooltip();
                 }
             }).makeEditable({
-                sUpdateURL: "Data.ashx?<%= Constants.OperationKey %>=update" + parameters,
-                sAddURL: "Data.ashx?<%= Constants.OperationKey %>=create" + parameters,
+                sUpdateURL: "Data.ashx?<%= Constants.OperationKey %>=update&" + parameters,
+                sAddURL: "Data.ashx?<%= Constants.OperationKey %>=create&" + parameters,
                 sAddHttpMethod: "POST",
                 sDeleteHttpMethod: "POST",
-                sDeleteURL: "Data.ashx?<%= Constants.OperationKey %>=delete" + parameters,
+                sDeleteURL: "Data.ashx?<%= Constants.OperationKey %>=delete&" + parameters,
                 oAddNewRowButtonOptions: {
                     label: "Add...",
                     icons: { primary: 'ui-icon-plus' }

@@ -98,20 +98,16 @@ namespace Geta.DdsAdmin.Admin
 
         protected string GetParameters()
         {
-            var result = GetQueryStringParameter(Constants.StoreKey, CurrentStoreName);
-
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            var builder = new UrlBuilder("http://localhost");
+            builder.QueryCollection[Constants.StoreKey] = CurrentStoreName;
             if (CurrentFilterMessage != null)
             {
-                result += GetQueryStringParameter(Constants.FilterColumnNameKey, CurrentFilterColumnName);
-                result += GetQueryStringParameter(Constants.FilterKey, CurrentFilter);
+                builder.QueryCollection[Constants.FilterColumnNameKey] = CurrentFilterColumnName;
+                builder.QueryCollection[Constants.FilterKey] = CurrentFilter;
             }
 
-            return result;
-        }
-
-        private string GetQueryStringParameter(string key, string value)
-        {
-            return $"&{key}={HttpUtility.UrlEncode(value)}";
+            return builder.Query.TrimStart('?');
         }
 
         private void GetQueryStringParameters()
