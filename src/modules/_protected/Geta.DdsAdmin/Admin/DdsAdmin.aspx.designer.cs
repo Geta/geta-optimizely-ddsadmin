@@ -58,6 +58,15 @@ namespace Geta.DdsAdmin.Admin {
         protected global::System.Web.UI.WebControls.Repeater repForm;
         
         /// <summary>
+        /// Filter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify, move the field declaration from the designer file to a code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Filter;
+        
+        /// <summary>
         /// Flush control.
         /// </summary>
         /// <remarks>

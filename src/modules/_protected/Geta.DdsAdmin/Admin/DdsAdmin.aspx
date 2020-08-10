@@ -53,6 +53,21 @@
     <%= CustomMessage %>
 
     <form runat="server">
+        <label for="CurrentFilterColumnName">Filter by column:</label>
+        <select id="CurrentFilterColumnName" name="CurrentFilterColumnName">
+            <option value="">--</option>
+            <% foreach(var columnName in Store.Columns.Select(x=> x.PropertyName).ToList()) { %>
+                <option value="<%= columnName %>" <%= CurrentFilterColumnName == columnName ? "selected='selected'" : string.Empty %>><%= columnName %></option>
+            <% } %>
+        </select>
+        <label for="CurrentFilter">by exact value:</label>
+        <input type="text" id="CurrentFilter" name="CurrentFilter" value="<%= CurrentFilter %>"/>
+        <span class="epi-cmsButton">
+            <asp:Button runat="server" ID="Filter" OnClick="FilterClick" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Search" Text="Filter"/>
+        </span>
+
+        <br/>
+
         <span class="epi-cmsButton">
             <asp:Button runat="server" ID="Flush" OnClick="FlushStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Delete" />
         </span>

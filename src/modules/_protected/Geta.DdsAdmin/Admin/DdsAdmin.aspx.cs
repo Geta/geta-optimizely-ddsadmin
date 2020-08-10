@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI.WebControls;
 using ClosedXML.Excel;
+using EPiServer;
 using EPiServer.Data.Dynamic;
 using EPiServer.Shell;
 using EPiServer.UI;
@@ -175,6 +177,27 @@ namespace Geta.DdsAdmin.Admin
             _storeService.Flush(storeName, filterColumnName, filter);
 
             Response.Redirect(Request.RawUrl);
+        }
+
+        protected void FilterClick(object sender, EventArgs e)
+        {
+            var filterColumnName = Request.Form["CurrentFilterColumnName"];
+            var filter = Request.Form["CurrentFilter"];
+
+            var builder = new UrlBuilder(Request.Url);
+            if (string.IsNullOrWhiteSpace(filterColumnName))
+            {
+                builder.QueryCollection.Remove(Constants.FilterColumnNameKey);
+                builder.QueryCollection.Remove(Constants.FilterKey);
+
+            }
+            else
+            {
+                builder.QueryCollection[Constants.FilterColumnNameKey] = filterColumnName;
+                builder.QueryCollection[Constants.FilterKey] = filter;
+            }
+
+            Response.Redirect(builder.ToString());
         }
 
         protected void ExportStore(object sender, EventArgs e)
