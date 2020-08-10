@@ -73,7 +73,7 @@ namespace Geta.DdsAdmin.Admin
             return SerializeResponse(context, deleteResponse);
         }
 
-        private BaseResponse Read(HttpContext context, string storeName)
+        private BaseResponse Read(HttpContext context, string storeName, string filterColumnName, string filter)
         {
             int start = Convert.ToInt32(context.Request.QueryString["iDisplayStart"]);
             int pageSize = Convert.ToInt32(context.Request.QueryString["iDisplayLength"]);
@@ -82,7 +82,7 @@ namespace Geta.DdsAdmin.Admin
             int sortByColumn = Convert.ToInt32(context.Request.QueryString["iSortCol_0"]);
             string sortDirection = context.Request.QueryString["sSortDir_0"];
 
-            var readResponse = this.crudService.Read(storeName, start, pageSize, search, sortByColumn, sortDirection);
+            var readResponse = this.crudService.Read(storeName, start, pageSize, search, sortByColumn, sortDirection, filterColumnName, filter);
 
             var result = new
                              {
@@ -113,6 +113,10 @@ namespace Geta.DdsAdmin.Admin
             logger.InfoFormat("Operation:{0}", operation);
             string storeName = context.Request.QueryString[Constants.StoreKey];
             logger.InfoFormat("Store:{0}", operation);
+            string filterColumnName = context.Request.QueryString[Constants.FilterColumnNameKey];
+            logger.InfoFormat("Filter column name:{0}", filterColumnName);
+            string filter = context.Request.QueryString[Constants.FilterKey];
+            logger.InfoFormat("Filter:{0}", filter);
 
             context.Response.Clear();
             context.Response.ClearContent();
@@ -123,7 +127,7 @@ namespace Geta.DdsAdmin.Admin
             {
                 case "read":
                     {
-                        response = Read(context, storeName);
+                        response = Read(context, storeName, filterColumnName, filter);
                     }
                     break;
                 case "update":

@@ -74,7 +74,7 @@ namespace Geta.DdsAdmin.Dds.Services
             return response;
         }
 
-        public ReadResponse Read(string storeName, int start, int pageSize, string search, int sortByColumn, string sortDirection)
+        public ReadResponse Read(string storeName, int start, int pageSize, string search, int sortByColumn, string sortDirection, string filterByColumn, string filterValue)
         {
             var response = new ReadResponse { Success = false };
             logger.Debug("Read started");
@@ -83,22 +83,38 @@ namespace Geta.DdsAdmin.Dds.Services
             var store = DynamicDataStoreFactory.Instance.GetStore(storeName);
             var storeMetadata = store.Metadata();
 
-            // TODO: we cannot order here due to fact that this is PropertyBag, if we could it would be great performance boost
-            // var orderBy = sortByColumn == 0 ? "Id" : StoreMetadata.Columns.ToList()[sortByColumn - 1].PropertyName;
-            var query = store.ItemsAsPropertyBag(); // .OrderBy(orderBy);
+            List<PropertyBag> data;
+            int count;
 
-            var data = sortByColumn == 0 && string.IsNullOrEmpty(search)
-                               ? (sortDirection == "asc"
-                                          ? query.OrderBy(r => r.Id).Skip(start).Take(pageSize).ToList()
-                                          : query.OrderByDescending(r => r.Id).Skip(start).Take(pageSize).ToList())
-                               : query.ToList();
+            var preSorted = false;
+
+            if (string.IsNullOrWhiteSpace(filterByColumn))
+            {
+                // TODO: we cannot order here due to fact that this is PropertyBag, if we could it would be great performance boost
+                // var orderBy = sortByColumn == 0 ? "Id" : StoreMetadata.Columns.ToList()[sortByColumn - 1].PropertyName;
+                var query = store.ItemsAsPropertyBag(); // .OrderBy(orderBy);
+
+                preSorted = sortByColumn == 0 && string.IsNullOrEmpty(search);
+
+                data = preSorted
+                                   ? (sortDirection == "asc"
+                                              ? query.OrderBy(r => r.Id).Skip(start).Take(pageSize).ToList()
+                                              : query.OrderByDescending(r => r.Id).Skip(start).Take(pageSize).ToList())
+                                   : query.ToList();
+                count = query.Count();
+            }
+            else
+            {
+                data = store.FindAsPropertyBag(filterByColumn, filterValue).ToList();
+                count = data.Count;
+            }
 
             List<List<string>> stringData;
-            if (sortByColumn == 0 && string.IsNullOrEmpty(search))
+            if (preSorted)
             {
                 // no sorting and no filtering, use fast code then
                 stringData = FormatData(storeMetadata, data);
-                totalCount = query.Count();
+                totalCount = count;
             }
             else
             {
