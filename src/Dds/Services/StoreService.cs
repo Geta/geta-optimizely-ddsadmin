@@ -85,7 +85,7 @@ namespace Geta.DdsAdmin.Dds.Services
             try
             {
                 var store = DynamicDataStoreFactory.Instance.GetStore(storeName);
-                if (!string.IsNullOrWhiteSpace(filterColumnName) && !string.IsNullOrWhiteSpace(filter))
+                if (!string.IsNullOrWhiteSpace(filterColumnName))
                 {
                     var itemsToBeDeleted = store.FindAsPropertyBag(filterColumnName, filter).ToList();
                     foreach (var itemToBeDeleted in itemsToBeDeleted)

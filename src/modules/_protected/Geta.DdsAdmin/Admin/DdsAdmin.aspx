@@ -86,23 +86,23 @@
 
     <script type="text/javascript" charset="utf-8">
         $(function() {
-            var storeParameter = "<%= GetParameters() %>";
+            var parameters = "<%= GetParameters() %>";
             var dataTable = $('#storeItems').dataTable({
                 sDom: "Rlfrtip",
                 bJQueryUI: true,
                 bProcessing: true,
                 bServerSide: true,
                 sPaginationType: "full_numbers",
-                sAjaxSource: "Data.ashx?<%= Constants.OperationKey %>=read&" + storeParameter,
+                sAjaxSource: "Data.ashx?<%= Constants.OperationKey %>=read" + parameters,
                 fnInitComplete: function(oSettings, json) {
                     initTooltip();
                 }
             }).makeEditable({
-                sUpdateURL: "Data.ashx?<%= Constants.OperationKey %>=update&" + storeParameter,
-                sAddURL: "Data.ashx?<%= Constants.OperationKey %>=create&" + storeParameter,
+                sUpdateURL: "Data.ashx?<%= Constants.OperationKey %>=update" + parameters,
+                sAddURL: "Data.ashx?<%= Constants.OperationKey %>=create" + parameters,
                 sAddHttpMethod: "POST",
                 sDeleteHttpMethod: "POST",
-                sDeleteURL: "Data.ashx?<%= Constants.OperationKey %>=delete&" + storeParameter,
+                sDeleteURL: "Data.ashx?<%= Constants.OperationKey %>=delete" + parameters,
                 oAddNewRowButtonOptions: {
                     label: "Add...",
                     icons: { primary: 'ui-icon-plus' }

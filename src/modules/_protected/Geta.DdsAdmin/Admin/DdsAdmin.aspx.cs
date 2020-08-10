@@ -8,6 +8,7 @@ using ClosedXML.Excel;
 using EPiServer.Data.Dynamic;
 using EPiServer.Shell;
 using EPiServer.UI;
+using EPiServer.Web.Internal;
 using Geta.DdsAdmin.Dds;
 using Geta.DdsAdmin.Dds.Services;
 
@@ -97,15 +98,20 @@ namespace Geta.DdsAdmin.Admin
 
         protected string GetParameters()
         {
-            var result = $"{Constants.StoreKey}={CurrentStoreName}";
+            var result = GetQueryStringParameter(Constants.StoreKey, CurrentStoreName);
 
             if (CurrentFilterMessage != null)
             {
-                result += $"&{Constants.FilterColumnNameKey}={CurrentFilterColumnName}";
-                result += $"&{Constants.FilterKey}={CurrentFilter}";
+                result += GetQueryStringParameter(Constants.FilterColumnNameKey, CurrentFilterColumnName);
+                result += GetQueryStringParameter(Constants.FilterKey, CurrentFilter);
             }
 
             return result;
+        }
+
+        private string GetQueryStringParameter(string key, string value)
+        {
+            return $"&{key}={HttpUtility.UrlEncode(value)}";
         }
 
         private void GetQueryStringParameters()
@@ -191,7 +197,7 @@ namespace Geta.DdsAdmin.Admin
                 Response.Buffer = true;
                 Response.Charset = "";
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                if (!string.IsNullOrWhiteSpace(filterColumnName) && !string.IsNullOrWhiteSpace(filter))
+                if (!string.IsNullOrWhiteSpace(filterColumnName))
                 {
                     var fileName = $"{storeName}.{filterColumnName}.{filter}.xlsx";
                     Path.GetInvalidFileNameChars()

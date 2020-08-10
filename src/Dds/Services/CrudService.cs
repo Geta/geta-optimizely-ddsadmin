@@ -74,7 +74,7 @@ namespace Geta.DdsAdmin.Dds.Services
             return response;
         }
 
-        public ReadResponse Read(string storeName, int start, int pageSize, string search, int sortByColumn, string sortDirection, string filterColumnName, string filter)
+        public ReadResponse Read(string storeName, int start, int pageSize, string search, int sortByColumn, string sortDirection, string filterByColumn, string filterValue)
         {
             var response = new ReadResponse { Success = false };
             logger.Debug("Read started");
@@ -88,7 +88,7 @@ namespace Geta.DdsAdmin.Dds.Services
 
             var preSorted = false;
 
-            if (string.IsNullOrWhiteSpace(filterColumnName) || string.IsNullOrWhiteSpace(filter))
+            if (string.IsNullOrWhiteSpace(filterByColumn))
             {
                 // TODO: we cannot order here due to fact that this is PropertyBag, if we could it would be great performance boost
                 // var orderBy = sortByColumn == 0 ? "Id" : StoreMetadata.Columns.ToList()[sortByColumn - 1].PropertyName;
@@ -105,7 +105,7 @@ namespace Geta.DdsAdmin.Dds.Services
             }
             else
             {
-                data = store.FindAsPropertyBag(filterColumnName, filter).ToList();
+                data = store.FindAsPropertyBag(filterByColumn, filterValue).ToList();
                 count = data.Count;
             }
 
