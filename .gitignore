@@ -129,7 +129,7 @@ publish/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
-# TODO: Comment the next line if you want to checkin your web deploy settings 
+# TODO: Comment the next line if you want to checkin your web deploy settings
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
 *.publishproj
@@ -199,14 +199,4 @@ FakesAssemblies/
 License.config
 /Blomsterringen.Web/imagecache
 maildrop
-.idea/.idea.Geta.DdsAdmin/riderModule.iml
-.idea/.idea.Geta.DdsAdmin/.idea/vcs.xml
-.idea/.idea.Geta.DdsAdmin/.idea/misc.xml
-.idea/.idea.Geta.DdsAdmin/.idea/indexLayout.xml
-.idea/.idea.Geta.DdsAdmin/.idea/.name
-.idea/.idea.Geta.DdsAdmin/.idea/.idea.Geta.DdsAdmin.iml
-.idea/.idea.Geta.DdsAdmin/.idea/contentModel.xml
-.idea/.idea.Geta.DdsAdmin/.idea/modules.xml
-.idea/.idea.Geta.DdsAdmin/.idea/projectSettingsUpdater.xml
-.idea/.idea.Geta.DdsAdmin/.idea/workspace.xml
-.idea/.idea.Geta.DdsAdmin/.idea/encodings.xml
+.idea
