@@ -69,10 +69,10 @@
         <br/>
 
         <span class="epi-cmsButton">
-            <asp:Button runat="server" ID="Flush" OnClick="FlushStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Delete" />
+            <asp:Button runat="server" ID="Flush" OnClick="FlushStoreClick" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Delete" />
         </span>
         <span class="epi-cmsButton">
-            <asp:Button runat="server" ID="Export" OnClick="ExportStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Export"/>
+            <asp:Button runat="server" ID="Export" OnClick="ExportStoreClick" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Export"/>
         </span>
         <input type="hidden" name="CurrentStoreName" value="<%= CurrentStoreName %>"/>
     </form>

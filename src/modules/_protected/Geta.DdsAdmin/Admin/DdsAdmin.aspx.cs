@@ -31,6 +31,7 @@ namespace Geta.DdsAdmin.Admin
         protected string CurrentStoreName { get; set; }
         protected string CurrentFilterColumnName { get; set; }
         protected string CurrentFilter { get; set; }
+        protected bool ExportToXlsx { get; set; }
         protected string CustomHeading { get; set; }
         protected string CustomMessage { get; set; }
         protected string CurrentFilterMessage { get; set; }
@@ -87,6 +88,12 @@ namespace Geta.DdsAdmin.Admin
             }
 
             GetQueryStringParameters();
+            if (ExportToXlsx)
+            {
+                RenderXlsx(CurrentStoreName, CurrentFilterColumnName, CurrentFilter);
+                return;
+            }
+
             Store = _storeService.GetMetadata(CurrentStoreName);
 
             LoadAndDisplayData();
@@ -117,6 +124,7 @@ namespace Geta.DdsAdmin.Admin
             CurrentStoreName = HttpUtility.HtmlEncode(Request.QueryString[Constants.StoreKey]);
             CurrentFilterColumnName = HttpUtility.HtmlEncode(Request.QueryString[Constants.FilterColumnNameKey]);
             CurrentFilter = HttpUtility.HtmlEncode(Request.QueryString[Constants.FilterKey]);
+            ExportToXlsx = HttpUtility.HtmlEncode(Request.QueryString[Constants.ExportToXlsxKey]) != null;
             CurrentFilterMessage =
                 !string.IsNullOrWhiteSpace(CurrentFilterColumnName) && !string.IsNullOrWhiteSpace(CurrentFilter)
                     ? $"filtered by {CurrentFilterColumnName} = {CurrentFilter}"
@@ -168,7 +176,7 @@ namespace Geta.DdsAdmin.Admin
                 : "Export filtered data to Excel";
         }
 
-        protected void FlushStore(object sender, EventArgs e)
+        protected void FlushStoreClick(object sender, EventArgs e)
         {
             var storeName = Request.Form["CurrentStoreName"];
             var filterColumnName = Request.Form["CurrentFilterColumnName"];
@@ -189,7 +197,6 @@ namespace Geta.DdsAdmin.Admin
             {
                 builder.QueryCollection.Remove(Constants.FilterColumnNameKey);
                 builder.QueryCollection.Remove(Constants.FilterKey);
-
             }
             else
             {
@@ -200,12 +207,17 @@ namespace Geta.DdsAdmin.Admin
             Response.Redirect(builder.ToString());
         }
 
-        protected void ExportStore(object sender, EventArgs e)
+        protected void ExportStoreClick(object sender, EventArgs e)
         {
             var storeName = Request.Form["CurrentStoreName"];
             var filterColumnName = Request.Form["CurrentFilterColumnName"];
             var filter = Request.Form["CurrentFilter"];
 
+            RenderXlsx(storeName, filterColumnName, filter);
+        }
+
+        private void RenderXlsx(string storeName, string filterColumnName, string filter)
+        {
             var ddsDataSet = GetDdsStoreAsDataSet(storeName, filterColumnName, filter);
 
             using (var wb = new XLWorkbook())
@@ -221,7 +233,8 @@ namespace Geta.DdsAdmin.Admin
                     var fileName = $"{storeName}.{filterColumnName}.{filter}.xlsx";
                     Path.GetInvalidFileNameChars()
                         .Aggregate(fileName, (current, c) => current.Replace(c, '_'));
-                    Response.AddHeader("content-disposition", $"attachment;filename={fileName.Substring(0, Math.Min(fileName.Length, 200))}");
+                    Response.AddHeader("content-disposition",
+                        $"attachment;filename={fileName.Substring(0, Math.Min(fileName.Length, 200))}");
                 }
                 else
                 {
