@@ -2,7 +2,7 @@ What is DDSAdmin?
 ------------------------------
 
 * Master<br>
-![](http://tc.geta.no/app/rest/builds/buildType:(id:Kolumbus_Main_00ci),branch:master/statusIcon)
+![](http://teamcity.getatools.ai/app/rest/builds/buildType:(id:Kolumbus_Main_00ci),branch:master/statusIcon)
 
 DDSAdmin is dynamic data store (DDS) create, read, update, delete (CRUD) editor for EPiServer CMS 11.
 
