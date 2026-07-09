@@ -80,12 +80,24 @@ namespace Geta.DdsAdmin.Dds.Services
             }
         }
 
-        public bool Flush(string storeName)
+        public bool Flush(string storeName, string filterColumnName, string filter)
         {
             try
             {
                 var store = DynamicDataStoreFactory.Instance.GetStore(storeName);
-                store.DeleteAll();
+                if (!string.IsNullOrWhiteSpace(filterColumnName))
+                {
+                    var itemsToBeDeleted = store.FindAsPropertyBag(filterColumnName, filter).ToList();
+                    foreach (var itemToBeDeleted in itemsToBeDeleted)
+                    {
+                        store.Delete(itemToBeDeleted.Id);
+                    }
+                }
+                else
+                {
+                    store.DeleteAll();
+                }
+
                 return true;
             }
             catch (Exception ex)

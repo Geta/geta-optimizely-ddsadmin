@@ -5,7 +5,7 @@
 <html>
 <head runat="server" ID="head1">
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
-    <title><%# CurrentStoreName %></title>
+    <title><%# CurrentStoreName %> <%# CurrentFilterMessage%></title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"> </script>
     <script type="text/javascript">
         if (typeof jQuery == 'undefined') {
@@ -49,15 +49,30 @@
         </asp:repeater>
     </form>
 
-    <h3><%= string.IsNullOrEmpty(CustomHeading) ? string.Format("Selected Store Type: {0}", CurrentStoreName) : CustomHeading %></h3>
+    <h3><%= string.IsNullOrEmpty(CustomHeading) ? string.Format("Selected Store Type: {0}", CurrentStoreName) : CustomHeading %> <%= CurrentFilterMessage %></h3>
     <%= CustomMessage %>
 
     <form runat="server">
+        <label for="CurrentFilterColumnName">Filter by column:</label>
+        <select id="CurrentFilterColumnName" name="CurrentFilterColumnName">
+            <option value="">--</option>
+            <% foreach(var columnName in Store.Columns.Select(x=> x.PropertyName).ToList()) { %>
+                <option value="<%= columnName %>" <%= CurrentFilterColumnName == columnName ? "selected='selected'" : string.Empty %>><%= columnName %></option>
+            <% } %>
+        </select>
+        <label for="CurrentFilter">by exact value:</label>
+        <input type="text" id="CurrentFilter" name="CurrentFilter" value="<%= CurrentFilter %>"/>
         <span class="epi-cmsButton">
-            <asp:Button runat="server" ID="Flush" Text="Delete All Data" OnClick="FlushStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Delete" OnClientClick="return confirm('Are you really want to delete all data from ths table??')"/>
+            <asp:Button runat="server" ID="Filter" OnClick="FilterClick" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Search" Text="Filter"/>
+        </span>
+
+        <br/>
+
+        <span class="epi-cmsButton">
+            <asp:Button runat="server" ID="Flush" OnClick="FlushStoreClick" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Delete" />
         </span>
         <span class="epi-cmsButton">
-            <asp:Button runat="server" ID="Export" Text="Export to Excel" OnClick="ExportStore" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Export"/>
+            <asp:Button runat="server" ID="Export" OnClick="ExportStoreClick" CssClass="epi-cmsButton-text epi-cmsButton-tools epi-cmsButton-Export"/>
         </span>
         <input type="hidden" name="CurrentStoreName" value="<%= CurrentStoreName %>"/>
     </form>
@@ -84,23 +99,23 @@
 
     <script type="text/javascript" charset="utf-8">
         $(function() {
-            var storeParameter = "<%= Constants.StoreKey %>=<%= CurrentStoreName %>";
+            var parameters = "<%= GetParameters() %>";
             var dataTable = $('#storeItems').dataTable({
                 sDom: "Rlfrtip",
                 bJQueryUI: true,
                 bProcessing: true,
                 bServerSide: true,
                 sPaginationType: "full_numbers",
-                sAjaxSource: "Data.ashx?<%= Constants.OperationKey %>=read&" + storeParameter,
+                sAjaxSource: "Data.ashx?<%= Constants.OperationKey %>=read&" + parameters,
                 fnInitComplete: function(oSettings, json) {
                     initTooltip();
                 }
             }).makeEditable({
-                sUpdateURL: "Data.ashx?<%= Constants.OperationKey %>=update&" + storeParameter,
-                sAddURL: "Data.ashx?<%= Constants.OperationKey %>=create&" + storeParameter,
+                sUpdateURL: "Data.ashx?<%= Constants.OperationKey %>=update&" + parameters,
+                sAddURL: "Data.ashx?<%= Constants.OperationKey %>=create&" + parameters,
                 sAddHttpMethod: "POST",
                 sDeleteHttpMethod: "POST",
-                sDeleteURL: "Data.ashx?<%= Constants.OperationKey %>=delete&" + storeParameter,
+                sDeleteURL: "Data.ashx?<%= Constants.OperationKey %>=delete&" + parameters,
                 oAddNewRowButtonOptions: {
                     label: "Add...",
                     icons: { primary: 'ui-icon-plus' }

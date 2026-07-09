@@ -12,7 +12,7 @@ Where can I get it?
 1. Add [EPiServer Nuget feed](http://nuget.episerver.com/en/Feed/) in Visual Studio Package Manager options (Tools ->Options -> Package Manager -> Package Sources).
 1. Install DDSAdmin via NuGet in Visual Studio. Ensure that you also install the required dependencies.
 1. Rebuild your solution.
-1. Start editing your data in EPiServer DDS storages. It will be available in CMS menu: Geta->DDS Admin.
+1. Start editing your data in EPiServer DDS storage's. It will be available in CMS menu: Geta->DDS Admin.
 
 Where can I get more info?
 ------------------------------
